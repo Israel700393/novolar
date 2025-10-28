@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Mercado Novo Lar</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Admin Styles */
+        .admin-container {
+            max-width: 1400px;
+            margin: 100px auto 0;
+            padding: 2rem;
+        }
+        
+        .admin-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px var(--shadow);
+        }
+        
+        .admin-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .admin-nav-btn {
+            background: var(--bg-color);
+            color: var(--text-color);
+            border: 2px solid var(--border-color);
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .admin-nav-btn.active,
+        .admin-nav-btn:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .admin-section {
+            display: none;
+        }
+        
+        .admin-section.active {
+            display: block;
+        }
+        
+        .admin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .admin-card {
+            background: var(--bg-color);
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px var(--shadow);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        
+        .admin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px var(--shadow-hover);
+        }
+        
+        .admin-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: #ff4757;
+        }
+        
+        .btn-danger:hover {
+            background: #ff3742;
+        }
+        
+        .btn-warning {
+            background: #ffa502;
+        }
+        
+        .btn-warning:hover {
+            background: #ff9500;
+        }
+        
+        .btn-success {
+            background: #2ed573;
+        }
+        
+        .btn-success:hover {
+            background: #17c0eb;
+        }
+        
+        .orders-list {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .order-item,
+        .product-item {
+            background: var(--bg-secondary);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+        }
+        
+        .order-item:hover,
+        .product-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px var(--shadow);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover::before {
+            transform: scale(1.5);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .stat-label {
+            position: relative;
+            z-index: 1;
+            opacity: 0.9;
+        }
+        
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
+        .search-admin {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 25px;
+            margin-bottom: 1rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--bg-color);
+            padding: 2rem;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .close-modal {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+        
+        .close-modal:hover {
+            color: var(--text-color);
+        }
+        
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+                margin-top: 80px;
+            }
+            
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .admin-nav {
+                gap: 0.5rem;
+            }
+            
+            .admin-nav-btn {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-shield-alt"></i> Admin - Mercado Novo Lar</h1>
+            </div>
+            <nav class="nav">
+                <a href="mercado-novo-lar.html"><i class="fas fa-arrow-left"></i> Voltar ao Site</a>
+            </nav>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <button class="btn btn-danger" onclick="logout()" style="padding: 8px 16px;">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h2><i class="fas fa-tachometer-alt"></i> Painel Administrativo</h2>
+            <p>Gerencie produtos, pedidos e estatísticas do Mercado Novo Lar</p>
+        </div>
+
+        <!-- Navegação Admin -->
+        <div class="admin-nav">
+            <button class="admin-nav-btn active" onclick="showSection('dashboard')">
+                <i class="fas fa-chart-bar"></i> Dashboard
+            </button>
+            <button class="admin-nav-btn" onclick="showSection('products')">
+                <i class="fas fa-box"></i> Produtos
+            </button>
+            <button class="admin-nav-btn" onclick="showSection('orders')">
+                <i class="fas fa-shopping-cart"></i> Pedidos
+            </button>
+            <button class="admin-nav-btn" onclick="showSection('settings')">
+                <i class="fas fa-cog"></i> Configurações
+            </button>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="admin-section active">
+            <!-- Estatísticas -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalProducts">26</div>
+                    <div class="stat-label">Produtos Cadastrados</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalOrders">47</div>
+                    <div class="stat-label">Pedidos Hoje</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalRevenue">R$ 1.247,50</div>
+                    <div class="stat-label">Faturamento Hoje</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgOrder">R$ 26,54</div>
+                    <div class="stat-label">Ticket Médio</div>
+                </div>
+            </div>
+
+            <div class="admin-grid">
+                <!-- Pedidos Recentes -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-clock"></i> Pedidos Recentes</h3>
+                    <div class="orders-list">
+                        <div class="order-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Pedido #001</strong><br>
+                                    Cliente: João Silva<br>
+                                    Total: R$ 45,30
+                                </div>
+                                <span style="background: #2ed573; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">Confirmado</span>
+                            </div>
+                        </div>
+                        <div class="order-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Pedido #002</strong><br>
+                                    Cliente: Maria Santos<br>
+                                    Total: R$ 67,80
+                                </div>
+                                <span style="background: #ffa502; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">Preparando</span>
+                            </div>
+                        </div>
+                        <div class="order-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Pedido #003</strong><br>
+                                    Cliente: Pedro Costa<br>
+                                    Total: R$ 23,50
+                                </div>
+                                <span style="background: #ff4757; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">Entregue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Produtos em Destaque -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-star"></i> Produtos Mais Vendidos</h3>
+                    <div class="orders-list">
+                        <div class="product-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>🍎 Maçã Gala</strong><br>
+                                    Vendas: 45 unidades<br>
+                                    Receita: R$ 224,55
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">1º</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>🍌 Banana Prata</strong><br>
+                                    Vendas: 38 unidades<br>
+                                    Receita: R$ 132,62
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary-color);">2º</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div id="products" class="admin-section">
+            <div class="admin-grid">
+                <!-- Adicionar Produto -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-plus"></i> Adicionar Produto</h3>
+                    <form id="addProductForm">
+                        <div class="form-group">
+                            <label>Nome do Produto</label>
+                            <input type="text" id="productName" required placeholder="Ex: Maçã Gala">
+                        </div>
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select id="productCategory" required>
+                                <option value="">Selecione...</option>
+                                <option value="frutas">Frutas</option>
+                                <option value="verduras">Verduras</option>
+                                <option value="carnes">Carnes</option>
+                                <option value="laticinios">Laticínios</option>
+                                <option value="bebidas">Bebidas</option>
+                                <option value="limpeza">Limpeza</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Preço (R$)</label>
+                            <input type="number" id="productPrice" step="0.01" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Descrição</label>
+                            <textarea id="productDescription" rows="3" placeholder="Descrição do produto..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Emoji/Ícone</label>
+                            <input type="text" id="productIcon" placeholder="🍎" maxlength="2">
+                        </div>
+                        <button type="submit" class="btn">
+                            <i class="fas fa-plus"></i> Adicionar Produto
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Lista de Produtos -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-box"></i> Produtos Cadastrados</h3>
+                    <input type="text" class="search-admin" id="productSearch" placeholder="Buscar produtos...">
+                    <div id="productsList" class="orders-list">
+                        <!-- Produtos serão carregados aqui -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Orders Section -->
+        <div id="orders" class="admin-section">
+            <div class="admin-grid">
+                <!-- Pedidos Pendentes -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-clock"></i> Pedidos Pendentes</h3>
+                    <div class="orders-list">
+                        <div class="order-item">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                <div>
+                                    <strong>Pedido #001</strong><br>
+                                    <small>Hoje, 14:30</small>
+                                </div>
+                                <span style="background: #ffa502; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">Pendente</span>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Cliente:</strong> João Silva<br>
+                                <strong>Telefone:</strong> (11) 99999-9999<br>
+                                <strong>Endereço:</strong> Rua das Flores, 123<br>
+                                <strong>Total:</strong> R$ 45,30
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>Itens:</strong><br>
+                                • 2x Maçã Gala - R$ 9,98<br>
+                                • 1x Leite Integral - R$ 4,99<br>
+                                • 3x Banana Prata - R$ 10,47
+                            </div>
+                            <div class="product-actions">
+                                <button class="btn btn-success" onclick="updateOrderStatus(1, 'confirmado')">
+                                    <i class="fas fa-check"></i> Confirmar
+                                </button>
+                                <button class="btn btn-danger" onclick="updateOrderStatus(1, 'cancelado')">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Histórico de Pedidos -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-history"></i> Histórico de Pedidos</h3>
+                    <input type="text" class="search-admin" placeholder="Buscar pedidos...">
+                    <div class="orders-list">
+                        <div class="order-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Pedido #002</strong><br>
+                                    Maria Santos - R$ 67,80<br>
+                                    <small>Ontem, 16:45</small>
+                                </div>
+                                <span style="background: #2ed573; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">Entregue</span>
+                            </div>
+                        </div>
+                        <div class="order-item">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <strong>Pedido #003</strong><br>
+                                    Pedro Costa - R$ 23,50<br>
+                                    <small>Ontem, 12:20</small>
+                                </div>
+                                <span style="background: #2ed573; color: white; padding: 4px 12px; border-radius: 15px; font-size: 0.8rem;">Entregue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Section -->
+        <div id="settings" class="admin-section">
+            <div class="admin-grid">
+                <!-- Configurações Gerais -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-cog"></i> Configurações Gerais</h3>
+                    <div class="form-group">
+                        <label>Taxa de Entrega (R$)</label>
+                        <input type="number" id="deliveryFee" value="5.00" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Pedido Mínimo (R$)</label>
+                        <input type="number" id="minOrder" value="30.00" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label>Horário de Funcionamento</label>
+                        <input type="text" id="workingHours" value="07:00 - 22:00">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp para Pedidos</label>
+                        <input type="text" id="whatsappNumber" value="(11) 99999-9999">
+                    </div>
+                    <button class="btn" onclick="saveSettings()">
+                        <i class="fas fa-save"></i> Salvar Configurações
+                    </button>
+                </div>
+
+                <!-- Backup e Dados -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-database"></i> Backup e Dados</h3>
+                    <div style="margin-bottom: 1rem;">
+                        <p>Faça backup dos seus dados regularmente para evitar perdas.</p>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn" onclick="exportData()">
+                            <i class="fas fa-download"></i> Exportar Dados
+                        </button>
+                        <button class="btn btn-warning" onclick="importData()">
+                            <i class="fas fa-upload"></i> Importar Dados
+                        </button>
+                    </div>
+                    <hr style="margin: 1.5rem 0; border: 1px solid var(--border-color);">
+                    <div style="margin-bottom: 1rem;">
+                        <p style="color: var(--text-secondary);">Último backup: Hoje, 08:00</p>
+                    </div>
+                </div>
+
+                <!-- Segurança -->
+                <div class="admin-card">
+                    <h3><i class="fas fa-shield-alt"></i> Segurança</h3>
+                    <div class="form-group">
+                        <label>Senha Atual</label>
+                        <input type="password" id="currentPassword" placeholder="Digite a senha atual">
+                    </div>
+                    <div class="form-group">
+                        <label>Nova Senha</label>
+                        <input type="password" id="newPassword" placeholder="Digite a nova senha">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmar Nova Senha</label>
+                        <input type="password" id="confirmPassword" placeholder="Confirme a nova senha">
+                    </div>
+                    <button class="btn btn-warning" onclick="changePassword()">
+                        <i class="fas fa-key"></i> Alterar Senha
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para Editar Produto -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeEditModal()">&times;</span>
+                <h3><i class="fas fa-edit"></i> Editar Produto</h3>
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId">
+                    <div class="form-group">
+                        <label>Nome do Produto</label>
+                        <input type="text" id="editProductName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria</label>
+                        <select id="editProductCategory" required>
+                            <option value="frutas">Frutas</option>
+                            <option value="verduras">Verduras</option>
+                            <option value="carnes">Carnes</option>
+                            <option value="laticinios">Laticínios</option>
+                            <option value="bebidas">Bebidas</option>
+                            <option value="limpeza">Limpeza</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Preço (R$)</label>
+                        <input type="number" id="editProductPrice" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição</label>
+                        <textarea id="editProductDescription" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Emoji/Ícone</label>
+                        <input type="text" id="editProductIcon" maxlength="2">
+                    </div>
+                    <div class="product-actions">
+                        <button type="submit" class="btn">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                        <button type="button" class="btn btn-danger" onclick="closeEditModal()">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script>
+        // Dados simulados para o admin
+        let adminProducts = [
+            { id: 1, name: 'Maçã Gala', category: 'frutas', price: 4.99, description: 'Maçã doce e crocante', icon: '🍎' },
+            { id: 2, name: 'Banana Prata', category: 'frutas', price: 3.49, description: 'Banana madura e saborosa', icon: '🍌' },
+            { id: 3, name: 'Alface Americana', category: 'verduras', price: 2.49, description: 'Alface fresca e crocante', icon: '🥬' },
+            { id: 4, name: 'Peito de Frango', category: 'carnes', price: 12.99, description: 'Peito de frango sem osso', icon: '🍗' },
+            { id: 5, name: 'Leite Integral', category: 'laticinios', price: 4.99, description: 'Leite integral 1L', icon: '🥛' }
+        ];
+
+        // Inicialização do tema
+        function initializeTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            updateThemeIcon(savedTheme);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        }
+
+        function updateThemeIcon(theme) {
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+            }
+        }
+
+        // Navegação entre seções
+        function showSection(sectionName) {
+            // Esconder todas as seções
+            document.querySelectorAll('.admin-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remover classe active de todos os botões
+            document.querySelectorAll('.admin-nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Mostrar seção selecionada
+            document.getElementById(sectionName).classList.add('active');
+            
+            // Adicionar classe active ao botão clicado
+            event.target.classList.add('active');
+        }
+
+        // Carregar produtos na lista do admin
+        function loadAdminProducts() {
+            const productsList = document.getElementById('productsList');
+            if (!productsList) return;
+            
+            productsList.innerHTML = '';
+            
+            adminProducts.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.className = 'product-item';
+                productItem.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: start;">
+                        <div style="flex: 1;">
+                            <strong>${product.icon} ${product.name}</strong><br>
+                            <span style="color: var(--text-secondary);">Categoria: ${product.category}</span><br>
+                            <span style="color: var(--primary-color); font-weight: bold;">R$ ${product.price.toFixed(2).replace('.', ',')}</span><br>
+                            <small style="color: var(--text-secondary);">${product.description}</small>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn" onclick="editProduct(${product.id})" style="padding: 8px 12px;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-danger" onclick="removeProduct(${product.id})" style="padding: 8px 12px;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                productsList.appendChild(productItem);
+            });
+        }
+
+        // Adicionar produto
+        document.addEventListener('DOMContentLoaded', function() {
+            const addProductForm = document.getElementById('addProductForm');
+            if (addProductForm) {
+                addProductForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const name = document.getElementById('productName').value;
+                    const category = document.getElementById('productCategory').value;
+                    const price = parseFloat(document.getElementById('productPrice').value);
+                    const description = document.getElementById('productDescription').value;
+                    const icon = document.getElementById('productIcon').value || '📦';
+                    
+                    if (name && category && price) {
+                        const newProduct = {
+                            id: Date.now(),
+                            name,
+                            category,
+                            price,
+                            description,
+                            icon
+                        };
+                        
+                        adminProducts.push(newProduct);
+                        
+                        // Mostrar notificação de sucesso
+                        showNotification(`Produto "${name}" adicionado com sucesso!`, 'success');
+                        
+                        // Limpar formulário
+                        this.reset();
+                        
+                        // Recarregar lista
+                        loadAdminProducts();
+                        
+                        // Atualizar estatísticas
+                        updateStats();
+                    }
+                });
+            }
+        });
+
+        // Editar produto
+        function editProduct(id) {
+            const product = adminProducts.find(p => p.id === id);
+            if (!product) return;
+            
+            document.getElementById('editProductId').value = product.id;
+            document.getElementById('editProductName').value = product.name;
+            document.getElementById('editProductCategory').value = product.category;
+            document.getElementById('editProductPrice').value = product.price;
+            document.getElementById('editProductDescription').value = product.description;
+            document.getElementById('editProductIcon').value = product.icon;
+            
+            document.getElementById('editModal').classList.add('active');
+        }
+
+        // Fechar modal de edição
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+        }
+
+        // Salvar edição do produto
+        document.addEventListener('DOMContentLoaded', function() {
+            const editProductForm = document.getElementById('editProductForm');
+            if (editProductForm) {
+                editProductForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const id = parseInt(document.getElementById('editProductId').value);
+                    const name = document.getElementById('editProductName').value;
+                    const category = document.getElementById('editProductCategory').value;
+                    const price = parseFloat(document.getElementById('editProductPrice').value);
+                    const description = document.getElementById('editProductDescription').value;
+                    const icon = document.getElementById('editProductIcon').value;
+                    
+                    const productIndex = adminProducts.findIndex(p => p.id === id);
+                    if (productIndex !== -1) {
+                        adminProducts[productIndex] = {
+                            id,
+                            name,
+                            category,
+                            price,
+                            description,
+                            icon
+                        };
+                        
+                        showNotification(`Produto "${name}" atualizado com sucesso!`, 'success');
+                        loadAdminProducts();
+                        closeEditModal();
+                    }
+                });
+            }
+        });
+
+        // Remover produto
+        function removeProduct(id) {
+            const product = adminProducts.find(p => p.id === id);
+            if (!product) return;
+            
+            if (confirm(`Tem certeza que deseja remover "${product.name}"?`)) {
+                adminProducts = adminProducts.filter(p => p.id !== id);
+                showNotification(`Produto "${product.name}" removido com sucesso!`, 'success');
+                loadAdminProducts();
+                updateStats();
+            }
+        }
+
+        // Busca de produtos no admin
+        function setupProductSearch() {
+            const searchInput = document.getElementById('productSearch');
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const searchTerm = this.value.toLowerCase();
+                    const filteredProducts = adminProducts.filter(product => 
+                        product.name.toLowerCase().includes(searchTerm) ||
+                        product.category.toLowerCase().includes(searchTerm)
+                    );
+                    
+                    const productsList = document.getElementById('productsList');
+                    productsList.innerHTML = '';
+                    
+                    filteredProducts.forEach(product => {
+                        const productItem = document.createElement('div');
+                        productItem.className = 'product-item';
+                        productItem.innerHTML = `
+                            <div style="display: flex; justify-content: space-between; align-items: start;">
+                                <div style="flex: 1;">
+                                    <strong>${product.icon} ${product.name}</strong><br>
+                                    <span style="color: var(--text-secondary);">Categoria: ${product.category}</span><br>
+                                    <span style="color: var(--primary-color); font-weight: bold;">R$ ${product.price.toFixed(2).replace('.', ',')}</span><br>
+                                    <small style="color: var(--text-secondary);">${product.description}</small>
+                                </div>
+                                <div class="product-actions">
+                                    <button class="btn" onclick="editProduct(${product.id})" style="padding: 8px 12px;">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-danger" onclick="removeProduct(${product.id})" style="padding: 8px 12px;">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        productsList.appendChild(productItem);
+                    });
+                });
+            }
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            document.getElementById('totalProducts').textContent = adminProducts.length;
+        }
+
+        // Notificações
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: ${type === 'success' ? '#2ed573' : type === 'error' ? '#ff4757' : '#4a7c59'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                z-index: 2001;
+                animation: slideIn 0.3s ease-out;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                max-width: 300px;
+            `;
+            notification.innerHTML = `<i class="fas fa-${type === 'success' ? 'check' : type === 'error' ? 'times' : 'info'}"></i> ${message}`;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
+        // Outras funções
+        function updateOrderStatus(orderId, status) {
+            showNotification(`Pedido #${orderId} ${status} com sucesso!`, 'success');
+        }
+
+        function saveSettings() {
+            showNotification('Configurações salvas com sucesso!', 'success');
+        }
+
+        function exportData() {
+            const data = {
+                products: adminProducts,
+                timestamp: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `mercado-novo-lar-backup-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            
+            showNotification('Dados exportados com sucesso!', 'success');
+        }
+
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        try {
+                            const data = JSON.parse(e.target.result);
+                            if (data.products) {
+                                adminProducts = data.products;
+                                loadAdminProducts();
+                                updateStats();
+                                showNotification('Dados importados com sucesso!', 'success');
+                            }
+                        } catch (error) {
+                            showNotification('Erro ao importar dados!', 'error');
+                        }
+                    };
+                    reader.readAsText(file);
+                }
+            };
+            input.click();
+        }
+
+        function changePassword() {
+            const current = document.getElementById('currentPassword').value;
+            const newPass = document.getElementById('newPassword').value;
+            const confirm = document.getElementById('confirmPassword').value;
+            
+            if (!current || !newPass || !confirm) {
+                showNotification('Preencha todos os campos!', 'error');
+                return;
+            }
+            
+            if (current !== 'admin123') {
+                showNotification('Senha atual incorreta!', 'error');
+                return;
+            }
+            
+            if (newPass !== confirm) {
+                showNotification('As senhas não coincidem!', 'error');
+                return;
+            }
+            
+            if (newPass.length < 6) {
+                showNotification('A nova senha deve ter pelo menos 6 caracteres!', 'error');
+                return;
+            }
+            
+            // Aqui você salvaria a nova senha
+            showNotification('Senha alterada com sucesso!', 'success');
+            
+            // Limpar campos
+            document.getElementById('currentPassword').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmPassword').value = '';
+        }
+
+        function logout() {
+            if (confirm('Tem certeza que deseja sair?')) {
+                window.location.href = 'mercado-novo-lar.html';
+            }
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTheme();
+            loadAdminProducts();
+            setupProductSearch();
+            updateStats();
+        });
+    </script>
+</body>
+</html>

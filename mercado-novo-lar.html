@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado Novo Lar - Delivery Online</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <h1><i class="fas fa-shopping-cart"></i> Mercado Novo Lar</h1>
+            </div>
+            <nav class="nav" id="mainNav">
+                <a href="#home" onclick="scrollToSection('home')">Início</a>
+                <a href="#produtos" onclick="scrollToSection('produtos')">Produtos</a>
+                <a href="#ofertas" onclick="scrollToSection('ofertas')">Ofertas</a>
+                <a href="#contato" onclick="scrollToSection('contato')">Contato</a>
+            </nav>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+                <div class="search-box">
+                    <input type="text" placeholder="Buscar produtos..." id="searchInput">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="cart-icon" onclick="toggleCart()">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </div>
+                <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h2>Seu mercado favorito agora online!</h2>
+            <p>Produtos frescos e de qualidade entregues na sua casa</p>
+            <button class="cta-button" onclick="scrollToSection('produtos')">
+                Fazer Pedido <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="container">
+            <h3>Categorias</h3>
+            <div class="category-grid">
+                <div class="category-card" onclick="filterProducts('frutas')">
+                    <i class="fas fa-apple-alt"></i>
+                    <span>Frutas</span>
+                </div>
+                <div class="category-card" onclick="filterProducts('verduras')">
+                    <i class="fas fa-carrot"></i>
+                    <span>Verduras</span>
+                </div>
+                <div class="category-card" onclick="filterProducts('carnes')">
+                    <i class="fas fa-drumstick-bite"></i>
+                    <span>Carnes</span>
+                </div>
+                <div class="category-card" onclick="filterProducts('laticinios')">
+                    <i class="fas fa-cheese"></i>
+                    <span>Laticínios</span>
+                </div>
+                <div class="category-card" onclick="filterProducts('bebidas')">
+                    <i class="fas fa-wine-bottle"></i>
+                    <span>Bebidas</span>
+                </div>
+                <div class="category-card" onclick="filterProducts('limpeza')">
+                    <i class="fas fa-spray-can"></i>
+                    <span>Limpeza</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products" id="produtos">
+        <div class="container">
+            <h3>Produtos em Destaque</h3>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterProducts('todos')">Todos</button>
+                <button class="filter-btn" onclick="filterProducts('frutas')">Frutas</button>
+                <button class="filter-btn" onclick="filterProducts('verduras')">Verduras</button>
+                <button class="filter-btn" onclick="filterProducts('carnes')">Carnes</button>
+                <button class="filter-btn" onclick="filterProducts('laticinios')">Laticínios</button>
+                <button class="filter-btn" onclick="filterProducts('bebidas')">Bebidas</button>
+            </div>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Seu Carrinho</h3>
+            <button class="close-cart" onclick="toggleCart()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <strong>Total: R$ <span id="cartTotal">0,00</span></strong>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">
+                Finalizar Pedido <i class="fas fa-credit-card"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay" id="overlay" onclick="toggleCart()"></div>
+
+    <!-- Ofertas Section -->
+    <section class="ofertas" id="ofertas">
+        <div class="container">
+            <h3>Ofertas Especiais</h3>
+            <div class="ofertas-grid">
+                <div class="oferta-card">
+                    <div class="oferta-badge">-20%</div>
+                    <div class="oferta-content">
+                        <h4>🍎 Frutas da Semana</h4>
+                        <p>Maçã, Banana e Laranja com 20% de desconto</p>
+                        <button class="btn-oferta" onclick="filterProducts('frutas')">Ver Ofertas</button>
+                    </div>
+                </div>
+                <div class="oferta-card">
+                    <div class="oferta-badge">Frete Grátis</div>
+                    <div class="oferta-content">
+                        <h4>🚚 Entrega Gratuita</h4>
+                        <p>Compras acima de R$ 50,00</p>
+                        <button class="btn-oferta" onclick="scrollToSection('produtos')">Aproveitar</button>
+                    </div>
+                </div>
+                <div class="oferta-card">
+                    <div class="oferta-badge">Novo</div>
+                    <div class="oferta-content">
+                        <h4>🥩 Carnes Premium</h4>
+                        <p>Linha especial de carnes selecionadas</p>
+                        <button class="btn-oferta" onclick="filterProducts('carnes')">Conhecer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" id="contato">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Mercado Novo Lar</h4>
+                    <p>Qualidade e frescor para sua família</p>
+                    <div class="social-links">
+                        <a href="#" title="Facebook"><i class="fab fa-facebook"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Atendimento</h4>
+                    <p><i class="fas fa-phone"></i> (11) 9999-9999</p>
+                    <p><i class="fas fa-envelope"></i> contato@mercadonovolar.com</p>
+                    <p><i class="fas fa-clock"></i> Seg-Dom: 7h às 22h</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Entrega</h4>
+                    <p>Entregamos em toda a região</p>
+                    <p>Pedido mínimo: R$ 30,00</p>
+                    <p>Taxa de entrega: R$ 5,00</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links Rápidos</h4>
+                    <p><a href="#home" onclick="scrollToSection('home')">Início</a></p>
+                    <p><a href="#produtos" onclick="scrollToSection('produtos')">Produtos</a></p>
+                    <p><a href="#ofertas" onclick="scrollToSection('ofertas')">Ofertas</a></p>
+                    <p><a href="admin.html" onclick="adminLogin()">Área Admin</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Mercado Novo Lar. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
